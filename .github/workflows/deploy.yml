@@ -1,0 +1,42 @@
+name: Build and Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main  # Set your default branch here
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        version: 'latest'  # Use the latest version or specify a version number
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1  # Ensure to use the latest version
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Configure Docker
+      run: gcloud auth configure-docker ${{ secrets.GCP_REGISTRY_HOSTNAME }}
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t ${{ secrets.GCP_REGISTRY_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/helloworld:$GITHUB_SHA .
+        docker push ${{ secrets.GCP_REGISTRY_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/helloworld:$GITHUB_SHA
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy helloworld \
+          --image ${{ secrets.GCP_REGISTRY_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/helloworld:$GITHUB_SHA \
+          --platform managed \
+          --region us-central1  # Update with your desired region
+          --allow-unauthenticated
