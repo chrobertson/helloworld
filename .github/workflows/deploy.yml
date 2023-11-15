@@ -25,8 +25,8 @@ jobs:
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Configure Docker
-      run: gcloud auth configure-docker ${{ secrets.GCP_REGISTRY_HOSTNAME }}
+    - name: Configure Docker client for GCP
+      run: gcloud auth configure-docker ${{ secrets.GCP_REGISTRY_HOSTNAME }}, --quiet
 
     - name: Build and push Docker image
       run: |
