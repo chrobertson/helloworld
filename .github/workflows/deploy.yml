@@ -39,5 +39,6 @@ jobs:
         gcloud run deploy helloworld \
           --image ${{ secrets.GCP_REGISTRY_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/helloworld:$GITHUB_SHA \
           --platform managed \
-          --region us-central1  # Update with your desired region
-          --allow-unauthenticated
+          --region us-central1 \
+          --allow-unauthenticated \
+          --quiet
