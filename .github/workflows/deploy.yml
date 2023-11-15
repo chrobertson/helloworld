@@ -3,7 +3,9 @@ name: Build and Deploy to Google Cloud Run
 on:
   push:
     branches:
-      - main  # Set your default branch here
+      - main
+  workflow_dispatch:
+
 
 jobs:
   setup-build-publish-deploy:
