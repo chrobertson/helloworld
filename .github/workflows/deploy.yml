@@ -39,7 +39,7 @@ jobs:
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy helloworld \
-          --image ${{ secrets.GCP_REGISTRY_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/helloworld:$GITHUB_SHA \
+          --image ${{ secrets.GCP_REGISTRY_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/0183180492fd:$GITHUB_SHA \
           --platform managed \
           --region us-central1 \
           --allow-unauthenticated \
